@@ -1,0 +1,34 @@
+<html>
+    <h1>
+        <p>Welcome, {{ user.username }}.</p>
+    </h1>
+    <form class="form-horizontal" name="phoneForm" action="/addphone/" method="post">
+        {% csrf_token %}
+        <div class="control-group">
+            <label class="control-label" for="firstname">firstname</label>
+            <div class="controls">
+                <input type="text" id="firstname" name="firstname"  placeholder="firstname">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="lastname">lastname</label>
+            <div class="controls">
+                <input type="lastname" name="lastname" id="lastname" placeholder="lastname">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="phone">lastname</label>
+            <div class="controls">
+                <input type="number" name="phone" id="phone" placeholder="phone">
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn">add phone number</button>
+            </div>
+        </div>
+    </form>
+    <h3>your phonbook:</h3>
+    {{phones}}
+
+    </html>
