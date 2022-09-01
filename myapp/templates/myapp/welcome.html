@@ -1,34 +1,152 @@
-<html>
-    <h1>
-        <p>Welcome, {{ user.username }}.</p>
-    </h1>
-    <form class="form-horizontal" name="phoneForm" action="/addphone/" method="post">
+{% extends "base.html" %}
+
+{% block content%}
+<div class="d-flex p-3">
+    <form class="form-horizontal  p-3 d-flex justify-content-center" name="phoneForm" action="/addphone/" method="post">
         {% csrf_token %}
-        <div class="control-group">
-            <label class="control-label" for="firstname">firstname</label>
-            <div class="controls">
-                <input type="text" id="firstname" name="firstname"  placeholder="firstname">
+        <div class="">
+            <div class="card px-5 py-5 d-flex row" id="form1">
+                
+                <div class="form-group m-1">
+                    <label class="control-label" for="firstname">firstname</label>
+                    <div class="controls">
+                        <input type="text" id="firstname" name="firstname"  placeholder="firstname">
+                    </div>
+                </div>
+                <div class="form-group m-1">
+                    <label class="control-label" for="lastname">lastname</label>
+                    <div class="controls">
+                        <input type="lastname" name="lastname" id="lastname" placeholder="lastname">
+                    </div>
+                </div>
+                <div class="form-group m-1">
+                    <label class="control-label" for="phone">phone number</label>
+                    <div class="controls">
+                        <input type="number" name="phone" id="phone" placeholder="phone">
+                    </div>
+                </div>
+                <div class="form-group m-4" >
+                    <div class="controls submitbtn" id="submit">
+                        <button type="submit" class="btn btn-primary " >submit contact</button>
+                        
+                    </div>
+                    <div class="controls edit d-none" id="edit">
+                        <button  class="btn btn-success m-1" onclick=editPhone()>edit</button>
+                        <div  class="btn btn-danger m-1" onclick=editDisplay(false)>cancel</div>
+                    </div>
             </div>
         </div>
-        <div class="control-group">
-            <label class="control-label" for="lastname">lastname</label>
-            <div class="controls">
-                <input type="lastname" name="lastname" id="lastname" placeholder="lastname">
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="phone">lastname</label>
-            <div class="controls">
-                <input type="number" name="phone" id="phone" placeholder="phone">
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <button type="submit" class="btn">add phone number</button>
-            </div>
         </div>
     </form>
-    <h3>your phonbook:</h3>
-    {{phones}}
+    <div class="card px-5 py-5 d-flex flex-grow-1 m-3" id="form1">
+        <div class="d-flex justify-content-between">
+        <h3>your phonebook:
 
-    </html>
+        </h3>
+        <div class="form">
+            <i class="fa fa-search"></i>
+            <input 
+                type="text" class="form-control form-input" placeholder="Search anything..."
+                onchange=search(this.value)
+            >
+            <span class="left-pan"><i class="fa fa-microphone"></i></span>
+        </div>
+        </div>
+        <table class="table">
+            <thead>
+              <tr >
+                
+                <th scope="col">First name</th>
+                <th scope="col">Last name</th>
+                <th scope="col">Phone</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+                 {% for f in phones %}
+                    <tr id={{f.id}} class="phone">
+                        <th scope="col" class="phone">
+                            {{ f.first_name }} 
+                        </th>
+                        <th scope="col" class="phone">
+                            {{ f.last_name }} 
+                        </th>
+                        <th scope="col" class="phone">
+                            {{ f.phonenumber }} 
+                        </th>
+
+                        <th scope="col" >
+                            <button class="btn btn-danger" onclick="deleteRow({{f.id}})">delete</button>
+                        </th>
+                        <th scope="col" >
+                            <button class="btn btn-warning" onclick="editRow({{f.id}})">edit</button>
+                        </th>
+
+                    </tr>
+
+                {% endfor %}
+            </tbody>
+    </div>
+</div>
+<script>
+    var editID;
+    function deleteRow(id){
+        document.getElementById(id).style.display = "none"
+        fetch("/delete/phone/"+id,
+    {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        
+    })
+    }
+    function editRow(id){
+        editDisplay(true);
+        editID = id;
+        const text = document.getElementById(id).getElementsByClassName("phone");
+        document.getElementById("firstname").value = text[0].innerHTML.split(' ').join('')
+        document.getElementById("lastname").value = text[1].innerHTML.split(' ').join('')
+        document.getElementById("phone").value = parseInt(text[2].innerHTML)
+        console.log(text[0].innerHTML)
+
+        // document.getElementById(id).style.display = "none"
+
+    }
+    function search(text){
+        const elements = document.getElementsByClassName("phone")
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].style.display = "none";
+            if(elements[i].innerHTML.indexOf(text) != -1){
+                elements[i].style.display = "table-row";
+            }
+            
+        }
+    }
+    function editDisplay(isEdit){
+        if(isEdit==true){
+            document.getElementById("submit").style.display = "none";
+            document.getElementById("edit").classList.remove("d-none");
+        }
+        else{
+            document.getElementById("submit").style.display = "flex";
+            document.getElementById("edit").classList.add("d-none");
+            document.getElementById("firstname").value = ''
+            document.getElementById("lastname").value = ''
+            document.getElementById("phone").value = ''
+        }
+    }
+    function editPhone(){
+
+         fetch("/delete/phone/"+editID,
+        {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        
+        })
+    }
+</script>
+{%endblock%}
