@@ -7,25 +7,25 @@
             <input type="hidden" name="next" value="{{ next }}" />
         {% endif %}
         <div class="col-md-6">
-            <div class="card px-5 py-5 " id="form1">
-        <div class="control-group">
-            <label class="control-label" for="username">Username</label>
-            <div class="forms-inputs mb-4">
-                <input type="text" id="username" name="username"  placeholder="Username">
+            <div class="card px-5 py-5 d-flex justify-content-center" id="form1">
+                <div class="control-group">
+                    <label class="control-label" for="username">Username</label>
+                    <div class="forms-inputs mb-4">
+                        <input type="text" id="username" name="username"  class="w-100" placeholder="Username">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="password">Password</label>
+                    <div class="forms-inputs mb-4">
+                        <input type="password" name="password" id="password" class="w-100" placeholder="Password">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <button type="submit" class="btn btn-primary ">Login</button>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="password">Password</label>
-            <div class="forms-inputs mb-4">
-                <input type="password" name="password" id="password" placeholder="Password">
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <button type="submit" class="btn btn-primary ">Login</button>
-            </div>
-        </div>
-        </div>
         </div>
         </form>
     </div>
