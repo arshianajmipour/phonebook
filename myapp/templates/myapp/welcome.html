@@ -67,6 +67,7 @@
                 <th scope="col"></th>
                 <th scope="col"></th>
               </tr>
+
             </thead>
             <tbody>
                  {% for f in phones %}
@@ -89,6 +90,7 @@
                         </th>
 
                     </tr>
+ 
 
                 {% endfor %}
             </tbody>
@@ -145,15 +147,21 @@
         }
     }
     function editPhone(){
-
-         fetch("/delete/phone/"+editID,
-        {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json'
-            },
+        let text = document.getElementById("phone").value; let pattern = /^(?:98|\+98|0098|0)?9[0-9]{9}$/;
+        let result = pattern.test(text);
+        if(result){
+            fetch("/delete/phone/"+editID,
+            {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
         
-        })
+            })
+        }
+        else{
+            alert("the phone number was invalid try again!")
+        }
     }
 </script>
 {%endblock%}

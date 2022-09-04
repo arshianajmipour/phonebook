@@ -1,4 +1,5 @@
 from django.http import *
+import re
 from django.shortcuts import render,redirect
 from django.template import RequestContext
 # from birthdayreminder.models import *
@@ -71,19 +72,20 @@ class addPhone(View):
       lastname = request.POST['lastname']
       phone = request.POST['phone']
 
-      validate_phone = RegexValidator(r'/^(?:98|\+98|0098|0)?9[0-9]{9}$/', 'invalid phone number')
+      # validate_phone = RegexValidator(r"(0|\+98)?([ ]|-|[()]){0,2}9[1|2|3|4]([ ]|-|[()]){0,2}(?:[0-9]([ ]|-|[()]){0,2}){8}", phone , inverse_match=True)
+      pat = re.compile(r"(0|\+98)?([ ]|-|[()]){0,2}9[1|2|3|4|5|6|7|8|9]([ ]|-|[()]){0,2}(?:[0-9]([ ]|-|[()]){0,2}){8}")
 
-      try:
-         validate_phone(phone)
+      
+      if re.fullmatch(pat, phone):
          newPhone = Phone(
             first_name = firstname, last_name = lastname, 
             phonenumber = phone , user_id = request.user.id
          )
          newPhone.save()
-      except:
+      else:
          messages.success(request, ('invalid phone number'))
          HttpResponseRedirect('/main/',{"msg" : "invalid phone number!"})
-      
+
       return HttpResponseRedirect('/main/')
 
 class deletePhone(View):
