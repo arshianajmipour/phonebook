@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content%}
+
+<form class="d-flex flex-column align-items-center container mt-5" name="LoginForm" action="/signup" method="post">
+    {% csrf_token %}
+
+    <div class="col-md-6">
+        <div class="card px-5 py-5 d-flex justify-content-center" id="form1">
+                
+                {{ form.as_table }} 
+            <a href="/login">already had an account?</a>
+            <div class="control-group">
+                <div class="controls">
+                    <button type="submit" class="btn btn-primary ">sign up and login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+
+{%endblock%}
