@@ -15,13 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from myapp.views import main,login_user,addPhone,editPhone,deletePhone,signup
+from myapp.views import main,login_user,EditPhone,deletePhone,signup,CreatePhone
+from django.contrib.auth.decorators import login_required
+
+
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('main/', main.as_view()),
+    path('main/', login_required(main.as_view())),
     path('login/', login_user.as_view()),
     path('signup',signup.as_view()),
-    path('addphone/',addPhone.as_view()),
-    path('delete/phone/<phone_id>',deletePhone.as_view()),
-    path('edit/phone/<phone_id>',editPhone),
+    path('delete/phone/<phone_id>',login_required(deletePhone.as_view())),
+    path('addPhone',login_required(CreatePhone.as_view())),
+    path('edit/phone/<int:pk>',login_required(EditPhone.as_view()) ,name='contact_edit'),
 ]

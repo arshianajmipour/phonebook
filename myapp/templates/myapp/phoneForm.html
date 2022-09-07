@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content%}
+<form class="form-horizontal  p-3 d-flex justify-content-center" name="phoneForm" method="post">
+    {% csrf_token %}
+    <div class="">
+        <div class="card px-5 py-5 d-flex row" id="form1">
+
+            {% for field,error in form.errors.items %}
+                <li class="text-danger">{{ error }}</li>
+            {% endfor %}
+
+            {% for field in form %}
+            <div class="form-group m-1">
+                {{ field.label_tag }}
+                <div class="controls">
+                    {{ field }}
+                </div>
+            </div>
+            {%endfor%}
+            
+            <div class="form-group m-4" >
+                <div class="controls submitbtn" id="submit">
+                    <button type="submit" class="btn btn-primary " >submit contact</button>
+                    
+                </div>
+                <div class="controls edit d-none" id="edit">
+                    <button  class="btn btn-success m-1" onclick=editPhone()>edit</button>
+                    <div  class="btn btn-danger m-1" onclick=editDisplay(false)>cancel</div>
+                </div>
+        </div>
+    </div>
+    </div>
+</form>
+{% endblock%}

@@ -11,6 +11,10 @@ from django.views import View
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.core.validators import RegexValidator
+from myapp.forms import ContactForm
+from django.views.generic.edit import UpdateView,CreateView
+from django.contrib.auth import logout
+
 
 class signup(View):
    def post(self,request):
@@ -36,16 +40,20 @@ class signup(View):
 
 class main(View):
    def get(self,request):
+      
       if request.user.is_authenticated:
          phones = Phone.objects.all()
          res =[]
-   
          for elt in phones:
+
             if(request.user.id == elt.user_id):
                res.append(elt)
+
          return render(request, "myapp/welcome.html", {'phones' : res})
+
       else:
-        return render(request,'myapp/login.html',{"msg":"please login first!"})
+         
+         return render(request,'myapp/login.html',{"msg":"please login first!"})
 
 
 
@@ -62,48 +70,27 @@ class login_user(View):
             return HttpResponseRedirect('/main/')
       return render(request,'myapp/login.html',{"msg":"wrong username or password!"})
    def get(self,request):
+      logout(request)
       return render(request,'myapp/login.html',{"msg":""})
 
-class addPhone(View):
-   def post(self , request):
-      firstname=lastname=phone=""
-      
-      firstname = request.POST['firstname']
-      lastname = request.POST['lastname']
-      phone = request.POST['phone']
-
-      # validate_phone = RegexValidator(r"(0|\+98)?([ ]|-|[()]){0,2}9[1|2|3|4]([ ]|-|[()]){0,2}(?:[0-9]([ ]|-|[()]){0,2}){8}", phone , inverse_match=True)
-      pat = re.compile(r"(0|\+98)?([ ]|-|[()]){0,2}9[1|2|3|4|5|6|7|8|9]([ ]|-|[()]){0,2}(?:[0-9]([ ]|-|[()]){0,2}){8}")
-
-      
-      if re.fullmatch(pat, phone):
-         newPhone = Phone(
-            first_name = firstname, last_name = lastname, 
-            phonenumber = phone , user_id = request.user.id
-         )
-         newPhone.save()
-      else:
-         messages.success(request, ('invalid phone number'))
-         HttpResponseRedirect('/main/',{"msg" : "invalid phone number!"})
-
-      return HttpResponseRedirect('/main/')
 
 class deletePhone(View):
    def get(self, request,phone_id):
       Phone.objects.filter(id=phone_id).delete()
       return HttpResponseRedirect('/main/')
 
-def editPhone(request,phone_id):
-   obj = Phone.objects.get(id=phone_id)
-   if True:
-       jsonData = json.loads(request.body)
-       fn = jsonData.get('fn')
-       ln = jsonData.get('ln')
-       pn = jsonData.get('pn')
-       obj = Phone(
-         first_name = fn, last_name = ln, 
-         phonenumber = pn , user_id = request.user.id
-       )  
-       obj.save()
-   return HttpResponseRedirect('/main/')
+
+class EditPhone(UpdateView):
+   model = Phone
+   form_class = ContactForm
+   template_name = 'myapp/phoneForm.html'
+   success_url = '/main'
+
+
+class CreatePhone(CreateView):
+   model = Phone
+   form_class = ContactForm
+   template_name = 'myapp/phoneForm.html'
+   success_url = '/main'
+
 

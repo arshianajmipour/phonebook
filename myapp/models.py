@@ -4,6 +4,7 @@ from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.core.validators import RegexValidator
+import re
 
 # Create your models here.
 class Phone(models.Model):
@@ -12,14 +13,14 @@ class Phone(models.Model):
     phonenumber = models.CharField(
         max_length = 20,
         verbose_name = "phone number",
-        
         validators=[
             RegexValidator(
-                regex='/^(?:98|\+98|0098|0)?9[0-9]{9}$/',
-                message='invalid phone number!',
+                regex=r"(0|\+98)?([ ]|-|[()]){0,2}9[1|2|3|4|5|6|7|8|9]([ ]|-|[()]){0,2}(?:[0-9]([ ]|-|[()]){0,2}){8}",
+                code='invalid phone number!',
             ),
         ]
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE ,verbose_name = "user id")
-    
+
+
 
