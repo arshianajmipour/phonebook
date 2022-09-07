@@ -93,4 +93,6 @@ class CreatePhone(CreateView):
    template_name = 'myapp/phoneForm.html'
    success_url = '/main'
 
-
+   def form_valid(self, form):
+      form.instance.user = self.request.user
+      return super().form_valid(form)
